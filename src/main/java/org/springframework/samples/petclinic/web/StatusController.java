@@ -74,6 +74,16 @@ public class StatusController {
         return ResponseEntity.status(ok ? HttpStatus.OK : HttpStatus.SERVICE_UNAVAILABLE).body(body);
     }
 
+    /**
+     * Liveness: only proves the JVM and the web layer answer. Deliberately does not touch the database,
+     * so a database outage does not make Kubernetes restart the application pods.
+     */
+    @GetMapping(value = "/livez", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String livez() {
+        return "OK";
+    }
+
     private Map<String, Object> database() {
         Map<String, Object> db = new LinkedHashMap<>();
         try (Connection connection = dataSource.getConnection();

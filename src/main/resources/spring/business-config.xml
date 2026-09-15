@@ -38,7 +38,7 @@
               p:dataSource-ref="dataSource">
             <property name="jpaVendorAdapter">
                 <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
-                      p:database="${jpa.database}" p:showSql="${jpa.showSql}"/>
+                      p:database="${jpa.database}" p:showSql="${JPA_SHOW_SQL:${jpa.showSql}}"/>
                 <!-- the 'database' parameter refers to the database dialect being used.
                 	By default, Hibernate will use a 'HSQL' dialect because 'jpa.database' has been set to 'HSQL'
                 	inside file spring/data-access.properties

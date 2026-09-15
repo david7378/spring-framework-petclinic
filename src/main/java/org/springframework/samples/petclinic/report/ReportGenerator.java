@@ -21,7 +21,8 @@ import java.util.Properties;
  * <p>
  * Standalone entry point (no Spring context), run by cron from the exploded webapp:
  * {@code java -cp 'WEB-INF/classes:WEB-INF/lib/*' org.springframework.samples.petclinic.report.ReportGenerator [outputDir]}.
- * Reads the same embedded properties as the web application; JVM system properties override them.
+ * Reads the same embedded properties as the web application; environment variables (DB_URL, DB_USERNAME,
+ * DB_PASSWORD, APP_REPORTS_DIR) and JVM system properties override them.
  */
 public class ReportGenerator {
 
@@ -39,6 +40,10 @@ public class ReportGenerator {
         load(props, "spring/data-access.properties");
         load(props, "app.properties");
         props.putAll(System.getProperties());
+        override(props, "jdbc.url", "DB_URL");
+        override(props, "jdbc.username", "DB_USERNAME");
+        override(props, "jdbc.password", "DB_PASSWORD");
+        override(props, "app.reports.dir", "APP_REPORTS_DIR");
 
         Path outputDir = Paths.get(args.length > 0 ? args[0] : props.getProperty("app.reports.dir"));
         Files.createDirectories(outputDir);
@@ -76,6 +81,13 @@ public class ReportGenerator {
                 throw new IllegalStateException("Missing classpath resource " + resource);
             }
             props.load(in);
+        }
+    }
+
+    private static void override(Properties props, String key, String envVar) {
+        String value = System.getenv(envVar);
+        if (value != null && !value.isBlank()) {
+            props.setProperty(key, value);
         }
     }
 

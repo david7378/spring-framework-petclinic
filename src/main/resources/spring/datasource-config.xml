@@ -25,13 +25,16 @@
     <!-- DataSource configuration for the tomcat jdbc connection pool 
     See here for more details on commons-dbcp versus tomcat-jdbc: 
     http://blog.ippon.fr/2013/03/13/improving-the-performance-of-the-spring-petclinic-sample-application-part-3-of-5/-->
+    <!-- DB_URL / DB_USERNAME / DB_PASSWORD (environment or -D) override the values embedded at build time,
+         so the same WAR/image runs on the legacy VM and on Kubernetes -->
     <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource"
-          p:driverClassName="${jdbc.driverClassName}" p:url="${jdbc.url}"
-          p:username="${jdbc.username}" p:password="${jdbc.password}"/>
+          p:driverClassName="${jdbc.driverClassName}" p:url="${DB_URL:${jdbc.url}}"
+          p:username="${DB_USERNAME:${jdbc.username}}" p:password="${DB_PASSWORD:${jdbc.password}}"/>
 
     <!-- Database initializer. If any of the script fails, the initialization stops. -->
     <!-- As an alternative, for embedded databases see <jdbc:embedded-database/>. -->
-    <jdbc:initialize-database data-source="dataSource">
+    <!-- DB_INIT_ENABLED=false skips it (e.g. against a database that is already migrated) -->
+    <jdbc:initialize-database data-source="dataSource" enabled="${DB_INIT_ENABLED:true}">
         <jdbc:script location="${jdbc.initLocation}"/>
         <jdbc:script location="${jdbc.dataLocation}"/>
     </jdbc:initialize-database>
