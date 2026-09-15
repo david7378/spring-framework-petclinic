@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS vets (
 
 CREATE INDEX IF NOT EXISTS idx_vets_last_name ON vets (last_name);
 
-ALTER SEQUENCE vets_id_seq RESTART WITH 100;
+-- Idempotent: keeps 100 as the starting id on an empty table, but never rewinds below existing rows.
+SELECT setval('vets_id_seq', GREATEST(100, (SELECT COALESCE(MAX(id), 0) + 1 FROM vets)), false);
 
 
 CREATE TABLE IF NOT EXISTS specialties (
@@ -18,7 +19,8 @@ CREATE TABLE IF NOT EXISTS specialties (
 
 CREATE INDEX IF NOT EXISTS idx_specialties_name ON specialties (name);
 
-ALTER SEQUENCE specialties_id_seq RESTART WITH 100;
+-- Idempotent: keeps 100 as the starting id on an empty table, but never rewinds below existing rows.
+SELECT setval('specialties_id_seq', GREATEST(100, (SELECT COALESCE(MAX(id), 0) + 1 FROM specialties)), false);
 
 
 CREATE TABLE IF NOT EXISTS vet_specialties (
@@ -39,7 +41,8 @@ CREATE TABLE IF NOT EXISTS types (
 
 CREATE INDEX IF NOT EXISTS idx_types_name ON types (name);
 
-ALTER SEQUENCE types_id_seq RESTART WITH 100;
+-- Idempotent: keeps 100 as the starting id on an empty table, but never rewinds below existing rows.
+SELECT setval('types_id_seq', GREATEST(100, (SELECT COALESCE(MAX(id), 0) + 1 FROM types)), false);
 
 CREATE TABLE IF NOT EXISTS owners (
   id SERIAL,
@@ -53,7 +56,8 @@ CREATE TABLE IF NOT EXISTS owners (
 
 CREATE INDEX IF NOT EXISTS idx_owners_last_name ON owners (last_name);
 
-ALTER SEQUENCE owners_id_seq RESTART WITH 100;
+-- Idempotent: keeps 100 as the starting id on an empty table, but never rewinds below existing rows.
+SELECT setval('owners_id_seq', GREATEST(100, (SELECT COALESCE(MAX(id), 0) + 1 FROM owners)), false);
 
 
 CREATE TABLE IF NOT EXISTS pets (
@@ -69,7 +73,8 @@ CREATE TABLE IF NOT EXISTS pets (
 
 CREATE INDEX IF NOT EXISTS idx_pets_name ON pets (name);
 
-ALTER SEQUENCE pets_id_seq RESTART WITH 100;
+-- Idempotent: keeps 100 as the starting id on an empty table, but never rewinds below existing rows.
+SELECT setval('pets_id_seq', GREATEST(100, (SELECT COALESCE(MAX(id), 0) + 1 FROM pets)), false);
 
 
 CREATE TABLE IF NOT EXISTS visits (
@@ -81,4 +86,5 @@ CREATE TABLE IF NOT EXISTS visits (
   CONSTRAINT pk_visits PRIMARY KEY (id)
 );
 
-ALTER SEQUENCE visits_id_seq RESTART WITH 100;
+-- Idempotent: keeps 100 as the starting id on an empty table, but never rewinds below existing rows.
+SELECT setval('visits_id_seq', GREATEST(100, (SELECT COALESCE(MAX(id), 0) + 1 FROM visits)), false);
