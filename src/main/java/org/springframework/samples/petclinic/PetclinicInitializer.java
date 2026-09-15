@@ -22,6 +22,8 @@ import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.support.AbstractDispatcherServletInitializer;
 
 import jakarta.servlet.Filter;
+import jakarta.servlet.MultipartConfigElement;
+import jakarta.servlet.ServletRegistration;
 import jakarta.servlet.ServletContext;
 
 
@@ -69,6 +71,12 @@ public class PetclinicInitializer extends AbstractDispatcherServletInitializer {
     @Override
     protected String[] getServletMappings() {
         return new String[]{"/"};
+    }
+
+    @Override
+    protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+        // Pet photo uploads: 5 MB per file, 6 MB per request
+        registration.setMultipartConfig(new MultipartConfigElement("", 5 * 1024 * 1024, 6 * 1024 * 1024, 0));
     }
 
     @Override

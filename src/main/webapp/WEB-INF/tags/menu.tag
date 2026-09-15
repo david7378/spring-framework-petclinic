@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 <%@ attribute name="name" required="true" rtexprvalue="true"
-              description="Name of the active menu: home, owners, vets or error" %>
+              description="Name of the active menu: home, owners, vets, reports, status or error" %>
 
 <nav class="navbar navbar-expand-lg navbar-dark" role="navigation">
     <div class="container-fluid">
@@ -25,6 +25,16 @@
                 <petclinic:menuItem active="${name eq 'vets'}" url="/vets"
                                     title="veterinarians" glyph="fa-th-list">
                     <span>Veterinarians</span>
+                </petclinic:menuItem>
+
+                <petclinic:menuItem active="${name eq 'reports'}" url="/reports"
+                                    title="nightly reports" glyph="fa-file-text">
+                    <span>Reports</span>
+                </petclinic:menuItem>
+
+                <petclinic:menuItem active="${name eq 'status'}" url="/status"
+                                    title="application status (JSON)" glyph="fa-heartbeat">
+                    <span>Status</span>
                 </petclinic:menuItem>
 
                 <petclinic:menuItem active="${name eq 'error'}" url="/oups"

@@ -1,0 +1,2 @@
+# Nightly PetClinic report (installed as /etc/cron.d/petclinic-report)
+0 2 * * * tomcat /opt/petclinic/bin/nightly-report.sh >> /var/log/petclinic/report.log 2>&1

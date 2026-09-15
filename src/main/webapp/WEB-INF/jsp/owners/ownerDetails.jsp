@@ -55,6 +55,19 @@
                         <dt>Type</dt>
                         <dd><c:out value="${pet.type.name}"/></dd>
                     </dl>
+                    <spring:url value="/pets/{petId}/photo" var="photoUrl">
+                        <spring:param name="petId" value="${pet.id}"/>
+                    </spring:url>
+                    <img src="${fn:escapeXml(photoUrl)}" alt="Photo of ${fn:escapeXml(pet.name)}"
+                         style="max-width: 160px; max-height: 160px;" onerror="this.style.display='none'"/>
+                    <spring:url value="/owners/{ownerId}/pets/{petId}/photo" var="uploadUrl">
+                        <spring:param name="ownerId" value="${owner.id}"/>
+                        <spring:param name="petId" value="${pet.id}"/>
+                    </spring:url>
+                    <form method="post" action="${fn:escapeXml(uploadUrl)}" enctype="multipart/form-data" class="mt-2">
+                        <input type="file" name="photo" accept="image/jpeg,image/png,image/gif,image/webp" required/>
+                        <button type="submit" class="btn btn-sm btn-primary">Upload photo</button>
+                    </form>
                 </th>
                 <td>
                     <table class="table-condensed" aria-describedby="petsAndVisits">

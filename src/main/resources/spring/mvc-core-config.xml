@@ -16,6 +16,12 @@
 
     <import resource="mvc-view-config.xml"/>
 
+    <!-- app.version, app.uploads.dir, app.reports.dir (environment and JVM system properties take precedence) -->
+    <context:property-placeholder location="classpath:app.properties"/>
+
+    <!-- multipart uploads (pet photos); limits are set on the DispatcherServlet in PetclinicInitializer -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver"/>
+
     <!--
         - POJOs labeled with the @Controller and @Service annotations are auto-detected.
     -->

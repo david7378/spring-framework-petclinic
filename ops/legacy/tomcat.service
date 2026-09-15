@@ -1,0 +1,22 @@
+# Installed as /etc/systemd/system/tomcat.service on the legacy VM
+[Unit]
+Description=Apache Tomcat 11 - PetClinic legacy
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=forking
+User=tomcat
+Group=tomcat
+Environment=JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+Environment=CATALINA_HOME=/opt/tomcat
+Environment=CATALINA_BASE=/opt/tomcat
+Environment=CATALINA_PID=/opt/tomcat/temp/tomcat.pid
+Environment="CATALINA_OPTS=-Xms512m -Xmx1024m"
+ExecStart=/opt/tomcat/bin/startup.sh
+ExecStop=/opt/tomcat/bin/shutdown.sh
+SuccessExitStatus=143
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
