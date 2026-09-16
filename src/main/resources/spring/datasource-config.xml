@@ -27,9 +27,15 @@
     http://blog.ippon.fr/2013/03/13/improving-the-performance-of-the-spring-petclinic-sample-application-part-3-of-5/-->
     <!-- DB_URL / DB_USERNAME / DB_PASSWORD (environment or -D) override the values embedded at build time,
          so the same WAR/image runs on the legacy VM and on Kubernetes -->
+    <!-- Pool: validate on borrow so connections killed by a database restart or a CNPG failover are
+         replaced instead of failing requests; cap the size (tomcat-jdbc defaults to 100 per instance,
+         the same as PostgreSQL's max_connections) -->
     <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource"
           p:driverClassName="${jdbc.driverClassName}" p:url="${DB_URL:${jdbc.url}}"
-          p:username="${DB_USERNAME:${jdbc.username}}" p:password="${DB_PASSWORD:${jdbc.password}}"/>
+          p:username="${DB_USERNAME:${jdbc.username}}" p:password="${DB_PASSWORD:${jdbc.password}}"
+          p:initialSize="${DB_POOL_MIN_IDLE:2}" p:minIdle="${DB_POOL_MIN_IDLE:2}"
+          p:maxActive="${DB_POOL_MAX:20}" p:maxIdle="${DB_POOL_MAX:20}"
+          p:testOnBorrow="true" p:validationQuery="SELECT 1"/>
 
     <!-- Database initializer. If any of the script fails, the initialization stops. -->
     <!-- As an alternative, for embedded databases see <jdbc:embedded-database/>. -->
